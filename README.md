@@ -1,4 +1,4 @@
-# Midterm Exam: Deep Learning Projects
+# TUGAS  (ENRICHMENT FOR MACHINE LEARNING AND DEEP LEARNING CLASSES) - INDIVIDUAL TASK
 
 ## Student Identification
 * **Name:** [Muhammad Farhan]
@@ -93,3 +93,4 @@ We visualize the **Confusion Matrix** using `matplotlib` to identify patterns in
 ---
 
 ### Ready to explore Classification? Open the notebook to begin! 🚀
+
