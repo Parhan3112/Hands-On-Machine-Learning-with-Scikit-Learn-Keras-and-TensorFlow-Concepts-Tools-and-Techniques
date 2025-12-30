@@ -1,90 +1,95 @@
 # Midterm Exam: Deep Learning Projects
 
 ## Student Identification
-* **Name:** [INSERT YOUR NAME HERE]
-* **Class:** [INSERT YOUR CLASS HERE]
-* **NIM:** [INSERT YOUR NIM HERE]
+* **Name:** [Muhammad Farhan]
+* **Class:** [TK-46-01]
+* **NIM:** [1103220187]
+* 
+
+# Chapter 3: Classification 📊
+
+**Book:** Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow
+
+Welcome to the notebook for **Chapter 3**. Unlike the previous chapter which focused on Regression (predicting values), this chapter dives deep into **Classification** (predicting classes/categories). The primary dataset used for exploration is the famous **MNIST** dataset (handwritten digits).
+
+
 
 ---
 
-## Repository Purpose
-This repository serves as a submission for the Deep Learning Midterm Exam. It contains two distinct Deep Neural Network (DNN) implementations using **PyTorch**, demonstrating proficiency in handling both **Binary Classification** (imbalanced data) and **Regression** tasks.
+## 🎯 Chapter Summary & Key Objectives
 
-The projects focus on the end-to-end machine learning pipeline, including data preprocessing, model architecture design, training loop implementation, and performance evaluation.
+This notebook covers the end-to-end process of building and evaluating classification systems. The key topics include:
 
----
-
-## Project Overview
-
-### 1. Fraud Detection (Classification)
-* **File:** midterm_dl_1.ipynb
-* **Objective:** Detect fraudulent transactions in a financial dataset.
-* **Challenge:** The dataset contains highly imbalanced classes and a mix of numerical and categorical features requiring robust preprocessing and weighted loss functions.
-
-### 2. Song Release Year Prediction (Regression)
-* **File:** midterm_dl_2.ipynb
-* **Objective:** Predict the release year of a song based on extracted audio features.
-* **Challenge:** Accurately mapping abstract audio features to a continuous time variable (Year).
+* **Binary Classification:** Distinguishing between two classes (e.g., Is this digit a 5 or not?).
+* **Performance Measures:** Going beyond simple accuracy, especially for skewed datasets.
+    * Confusion Matrix (TP, TN, FP, FN).
+    * Precision, Recall, and F1 Score.
+    * ROC Curve & AUC Score.
+* **Multiclass Classification:** Handling more than two classes (Digits 0-9).
+* **Error Analysis:** Visualizing errors to improve the model.
+* **Multilabel & Multioutput Classification:** Predicting multiple classes for a single instance.
 
 ---
 
-## Models and Matrix Results
+## 🧠 Theoretical Deep Dive
 
-### Project 1: Fraud Detection (Binary Classification)
+This notebook provides AI-assisted theoretical explanations for complex concepts found in classification tasks.
 
-**Model Architecture**
-* **Type:** Feed-Forward Neural Network (Multilayer Perceptron).
-* **Structure:** 3 Hidden Layers (512 -> 256 -> 64 neurons).
-* **Techniques:**
-    * **Batch Normalization:** Applied to stabilize training.
-    * **Dropout (0.2 - 0.3):** Applied to prevent overfitting.
-    * **Weighted Loss:** `BCEWithLogitsLoss` was used with a calculated positive weight to handle class imbalance.
+### A. The Precision/Recall Trade-off
+Why can't we have 100% Precision and 100% Recall simultaneously?
+* **Precision:** Focuses on quality. "Of all the items I picked, how many are valid?"
+* **Recall:** Focuses on quantity. "Of all valid items existing, how many did I find?"
 
-**Evaluation Metrics (10 Epochs)**
-| Metric | Result | Analysis |
-| :--- | :--- | :--- |
-| **Validation ROC-AUC** | **0.8972** | The model distinguishes between fraud and non-fraud transactions with approximately 90% effectiveness. |
-| **Training Loss** | **0.7723** | The model showed steady convergence without significant signs of overfitting. |
+> **Analogy:** Imagine a basket of apples (Positive) and stones (Negative). To ensure you *only* pick apples (High Precision), you might leave some behind (Low Recall). To ensure you get *every* apple (High Recall), you might accidentally pick up some stones (Low Precision). This balance is controlled by the **Decision Threshold**.
 
-### Project 2: Song Year Prediction (Regression)
+### B. Choosing the Right Curve: ROC vs PR
+* **ROC Curve (Receiver Operating Characteristic):** Plots True Positive Rate vs False Positive Rate. Best for balanced datasets.
+* **PR Curve (Precision-Recall):** Best used when the **positive class is rare** (e.g., fraud detection) or when False Positives are more critical than False Negatives.
 
-**Model Architecture**
-* **Type:** Deep Neural Network (DNN) for Regression.
-* **Structure:** 3 Hidden Layers (128 -> 64 -> 32 neurons).
-* **Techniques:** ReLU activation functions and Dropout layers (0.2).
-* **Optimizer:** Adam (`lr=0.001`).
 
-**Evaluation Metrics (200 Epochs)**
-| Metric | Result | Analysis |
-| :--- | :--- | :--- |
-| **MSE (Mean Squared Error)** | **75.79** | The average squared difference between estimated values and the actual value. |
-| **RMSE (Root MSE)** | **8.71** | On average, the prediction deviates by approximately 8.7 years from the actual release year. |
-| **MAE (Mean Absolute Error)**| **6.07** | The average absolute difference is around 6 years. |
-| **R² Score** | **0.3632** | The model explains approximately 36% of the variance in the dataset. |
+
+### C. Multiclass Strategies: OvO vs OvR
+* **OvR (One-versus-the-Rest):** Trains N classifiers (e.g., "Is this 5 or not?"). Efficient for most algorithms.
+* **OvO (One-versus-One):** Trains N*(N-1)/2 classifiers (e.g., "Is this 5 or 3?"). Useful for algorithms that don't scale well with large datasets (like SVM).
+
+
 
 ---
 
-## How to Navigate
+## 💻 Code Implementation & Workflow
 
-To run these notebooks, it is recommended to use **Google Colab** or a local Jupyter environment with GPU support (e.g., NVIDIA T4, L4, or A100).
+The notebook is structured into logical steps using **Python**, **NumPy**, **Matplotlib**, and **Scikit-Learn**.
 
-### Dependencies
-Ensure the following Python libraries are installed:
-* torch
-* pandas
-* numpy
-* scikit-learn
-* matplotlib
+### 1. Data Loading & Binary Classification
+We load the MNIST dataset using `fetch_openml` and split it into training and testing sets. We start by building a simple **"5-Detector"** using the **SGDClassifier** (Stochastic Gradient Descent).
 
-### Execution Steps
-1. **midterm_dl_1.ipynb (Fraud Detection):**
-    * Mount Google Drive (datasets are expected in `/content/drive/MyDrive/Dataset_MLDL/`).
-    * Run the preprocessing cells to handle missing values (`-1` for numeric, `unknown` for categorical) and apply Standard Scaling.
-    * Execute the training loop.
-    * The notebook generates a `submission.csv` file upon completion.
+### 2. Performance Evaluation
+We implement robust evaluation metrics beyond simple accuracy:
+* **Confusion Matrix:** Visualizing True/False Positives and Negatives.
+* **Precision & Recall Calculation:** Using `precision_score` and `recall_score`.
+* **ROC Curve Visualization:** Plotting the curve to analyze the classifier's performance at different thresholds.
 
-2. **midterm_dl_2.ipynb (Song Prediction):**
-    * Mount Google Drive.
-    * Run the cleaning and scaling cells (SimpleImputer and StandardScaler).
-    * Execute the training loop for 200 epochs.
-    * Review the Loss Plot and final Evaluation Metrics printed at the bottom of the notebook.
+
+
+### 3. Multiclass Classification
+We scale up the problem to classify all digits (0-9) using **Support Vector Machine (SVC)**. The notebook demonstrates how Scikit-Learn automatically selects between OvO and OvR strategies.
+
+### 4. Error Analysis
+We visualize the **Confusion Matrix** using `matplotlib` to identify patterns in the model's mistakes (e.g., confusing the digit '5' with '3').
+
+---
+
+## 🛠️ Libraries Used
+
+* **NumPy:** For array manipulation.
+* **Matplotlib:** For data visualization (digits and charts).
+* **Scikit-Learn:**
+    * `datasets`: To fetch MNIST.
+    * `linear_model`: SGDClassifier.
+    * `svm`: SVC.
+    * `model_selection`: Cross-validation tools.
+    * `metrics`: Confusion matrix, ROC, AUC, etc.
+
+---
+
+### Ready to explore Classification? Open the notebook to begin! 🚀
